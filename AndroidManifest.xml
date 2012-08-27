@@ -24,6 +24,10 @@
             android:name=".ReaderActivity"
             android:label="@string/title_activities" >
         </activity>
+        <activity
+            android:name=".BrowserActivity"
+            android:label="@string/title_activities" >
+        </activity>
     </application>
 
 </manifest>
