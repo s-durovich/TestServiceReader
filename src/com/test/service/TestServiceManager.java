@@ -7,6 +7,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
+import com.test.service.models.FileModel;
+
 public class TestServiceManager {
 
 	private static TestServiceManager instance;
@@ -39,6 +41,11 @@ public class TestServiceManager {
 		return;
 	}
 
+	public void uploadBook(String login, String password, FileModel file){
+		
+		mRestProxy.webInvoke(Constants.METHOD_SYNC_UPLOAD, login, password, file);
+	}
+	
 	private String getResponseEntity(HttpResponse response) {
 		String content = null;
 		if (response != null) {

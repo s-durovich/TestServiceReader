@@ -43,5 +43,8 @@ public class LoginActivity extends Activity {
 		mPasswordEdit = (EditText) findViewById(R.id.password_edit);
 		mURLEdit = (EditText) findViewById(R.id.url_edit);
 		mURLEdit.setText(Constants.DOMEN);
+		// Temporally
+		mEmailEdit.setText(Constants.LOGIN);
+		mPasswordEdit.setText(Constants.PASSWORD);
 	}
 }
