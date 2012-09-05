@@ -8,13 +8,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -29,8 +26,8 @@ import android.util.Log;
 
 public class RestServiceProxy {
 
-	private final static int CONNECTION_TIMEOUT = 50000;
-	private final static int SO_TIMEOUT = 50000;
+	private final static int CONNECTION_TIMEOUT = 90000;
+	private final static int SO_TIMEOUT = 90000;
 
 	private final static String SCHEME_NAME = "http";
 	private final static int SCHEME_PORT = 80;
@@ -119,18 +116,24 @@ public class RestServiceProxy {
 		// mHttpClient.getParams().setParameter(ClientPNames.COOKIE_POLICY,
 		// CookiePolicy.RFC_2109);
 
-		// httpPost.setHeader("Content-Type",
-		// "application/x-www-form-urlencoded");
+		httpPost.setHeader("Content-Type", contentType);
 
-		httpPost.setHeader("Host", Constants.DOMEN);
+		//httpPost.setHeader("Host", Constants.DOMEN);
+		//httpPost.setHeader("Host", "bookaz.jelastic.servint.net");
 		httpPost.setHeader("Authorization", Utils.getBase64Code(login, password));
-
-	/*	try {
+		httpPost.setHeader("User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
+		httpPost.setHeader("Connection", "keep-alive");
+		httpPost.setHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
+		httpPost.setHeader("Accept-Encoding", "gzip,deflate,sdch");
+		httpPost.setHeader("Accept-Language", "en-US,en;q=0.8");
+		try {
 			httpPost.setEntity(new StringEntity(data));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+		} catch (UnsupportedEncodingException e1) { // TODO Auto-generated catch
+													// block
+													// e1.printStackTrace();
+		}
+
 		// ByteArrayEntity(data.getBytes())
 		try {
 			response = mHttpClient.execute(httpPost);
