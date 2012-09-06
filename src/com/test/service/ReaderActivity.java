@@ -87,9 +87,9 @@ public class ReaderActivity extends Activity {
 				// new SyncBookmarkAsyncTask().execute(mStartFlag);
 
 				FileModel file = new FileModel();
-				file.fileName = "polnyiy_root";
-				file.extension = "fb2";
-				file.fileSize = 623900.0;
+				file.fileName = "text_book";
+				file.extension = "rtf";
+				file.fileSize = 610000.0;
 
 				byte[] bytes = copyToBuffer();
 				if (bytes != null) {

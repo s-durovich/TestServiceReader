@@ -25,9 +25,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import android.util.Log;
 
 public class RestServiceProxy {
+	private static final String TAG = "RestServiceProxy";
 
-	private final static int CONNECTION_TIMEOUT = 90000;
-	private final static int SO_TIMEOUT = 90000;
+	private final static int CONNECTION_TIMEOUT = 170000;
+	private final static int SO_TIMEOUT = 170000;
 
 	private final static String SCHEME_NAME = "http";
 	private final static int SCHEME_PORT = 80;
@@ -118,8 +119,8 @@ public class RestServiceProxy {
 
 		httpPost.setHeader("Content-Type", contentType);
 
-		//httpPost.setHeader("Host", Constants.DOMEN);
-		//httpPost.setHeader("Host", "bookaz.jelastic.servint.net");
+		// httpPost.setHeader("Host", Constants.DOMEN);
+		httpPost.setHeader("Host", "bookaz.jelastic.servint.net");
 		httpPost.setHeader("Authorization", Utils.getBase64Code(login, password));
 		httpPost.setHeader("User-Agent",
 				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
@@ -127,11 +128,11 @@ public class RestServiceProxy {
 		httpPost.setHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
 		httpPost.setHeader("Accept-Encoding", "gzip,deflate,sdch");
 		httpPost.setHeader("Accept-Language", "en-US,en;q=0.8");
+
 		try {
 			httpPost.setEntity(new StringEntity(data));
-		} catch (UnsupportedEncodingException e1) { // TODO Auto-generated catch
-													// block
-													// e1.printStackTrace();
+		} catch (UnsupportedEncodingException e1) {
+
 		}
 
 		// ByteArrayEntity(data.getBytes())
@@ -140,9 +141,11 @@ public class RestServiceProxy {
 			if (response != null) {
 				ret = EntityUtils.toString(response.getEntity());
 				Log.d("attachment", ret);
+				Log.i(TAG, ret);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Log.e(TAG, e.toString());
 			return "{}";
 		}
 		return (ret == null) ? "{}" : ret;

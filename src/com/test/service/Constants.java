@@ -1,8 +1,8 @@
 package com.test.service;
 
 public class Constants {
-	public static final String LOGIN = "corver@test.test";
-	public static final String PASSWORD = "password";
+	public static final String LOGIN = "test@test.test";
+	public static final String PASSWORD = "test";
 
 	public static final String SERVICE_URL = "http://bookaz.jelastic.servint.net/cr-sync";
 
