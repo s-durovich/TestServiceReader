@@ -11,6 +11,10 @@
     <string name="dialog_message">Do you want sync data with service?</string>
     <string name="btn_sync_data">Sync data</string>
     
-    <string name="btn_not_sync">Dont sync</string>
+    <string name="dialog_open_book_message">Do you want to open new book?</string>
+    <string name="btn_open_book">Open book</string>
+    <string name="btn_cansel">Cansel</string>
+    
+    <string name="menu_new_book">Open new book</string>
 
 </resources>

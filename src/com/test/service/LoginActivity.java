@@ -1,12 +1,12 @@
 package com.test.service;
 
 import com.test.service.R;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.app.Activity;
 import android.content.Intent;
 
@@ -34,8 +34,12 @@ public class LoginActivity extends Activity {
 				mDataProvider.setPassword(mPasswordEdit.getText().toString());
 				mDataProvider.setDomen(mURLEdit.getText().toString());
 
-				startActivity(new Intent(LoginActivity.this, ReaderActivity.class));
-				finish();
+				if (Utils.isOnline(LoginActivity.this)) {
+					startActivity(new Intent(LoginActivity.this, ReaderActivity.class));
+					finish();
+				} else
+					Toast.makeText(LoginActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
+
 			}
 		});
 

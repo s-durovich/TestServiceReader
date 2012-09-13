@@ -31,21 +31,25 @@ public class TestServiceManager {
 		instance = null;
 	}
 
-	public String setBookMark(String login, String password) {
-		HttpResponse response = mRestProxy.webGet(Constants.METHOD_SYNC_BOOKMARK, login, password);
+	public String setBookMark(String login, String password, String bookName, int bookPercent) {
+
+		String method = Constants.METHOD_SYNC_BOOKMARK + "?" + "bookName=" + bookName + "&" + "bookPercent="
+				+ bookPercent;
+		HttpResponse response = mRestProxy.webGet(method, login, password);
 
 		return getResponseEntity(response);
 	}
 
-	public void getBookMark(String login, String password) {
-		return;
+	public String getBookMark(String login, String password) {
+		HttpResponse response = mRestProxy.webGet(Constants.METHOD_SYNC_BOOKMARK, login, password);
+		return getResponseEntity(response);
 	}
 
-	public void uploadBook(String login, String password, FileModel file){
-		
+	public void uploadBook(String login, String password, FileModel file) {
+
 		mRestProxy.webInvoke(Constants.METHOD_SYNC_UPLOAD, login, password, file);
 	}
-	
+
 	private String getResponseEntity(HttpResponse response) {
 		String content = null;
 		if (response != null) {

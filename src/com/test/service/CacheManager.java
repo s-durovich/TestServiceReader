@@ -1,9 +1,6 @@
 package com.test.service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 
 public class CacheManager {
 
@@ -11,7 +8,6 @@ public class CacheManager {
 	public static final String READER_CACHE_DIR = READER_DIR + File.separator
 			+ "ReaderCache";
 
-	/*polnyiy_root.fb2*/
 	private static boolean cacheExternalAvailable() {
 		if (MemoryStatus.externalMemoryAvailable())
 			return true;

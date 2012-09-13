@@ -14,5 +14,7 @@ public class FileModel {
 	public byte[] content;
 
 	@JsonProperty("fileSize")
-	public Double fileSize;
+	public Long fileSize;
+	
+	public String book;
 }

@@ -1,11 +1,15 @@
 package com.test.service;
 
+import com.test.service.models.FileModel;
+
 public class AppDataProvider {
 	private static AppDataProvider instance;
 
 	private String mEmail;
 	private String mPassword;
 	private String mDomen;
+
+	private FileModel mBook;
 
 	private AppDataProvider() {
 
@@ -44,5 +48,13 @@ public class AppDataProvider {
 
 	public void setPassword(String mPassword) {
 		this.mPassword = mPassword;
+	}
+
+	public FileModel getBook() {
+		return mBook;
+	}
+
+	public void setBook(FileModel mBook) {
+		this.mBook = mBook;
 	}
 }

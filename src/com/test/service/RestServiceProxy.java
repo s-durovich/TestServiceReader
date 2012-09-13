@@ -56,6 +56,13 @@ public class RestServiceProxy {
 
 		HttpGet httpGet = new HttpGet(getUrl);
 		httpGet.setHeader("Host", AppDataProvider.getInstance().getDomen());
+		httpGet.setHeader("Content-Type", "application/json");
+		httpGet.setHeader("User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
+		httpGet.setHeader("Connection", "keep-alive");
+		httpGet.setHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
+		httpGet.setHeader("Accept-Encoding", "gzip,deflate,sdch");
+		httpGet.setHeader("Accept-Language", "en-US,en;q=0.8");
 		httpGet.setHeader("Authorization", Utils.getBase64Code(login, password));
 
 		try {
@@ -119,8 +126,7 @@ public class RestServiceProxy {
 
 		httpPost.setHeader("Content-Type", contentType);
 
-		// httpPost.setHeader("Host", Constants.DOMEN);
-		httpPost.setHeader("Host", "bookaz.jelastic.servint.net");
+		httpPost.setHeader("Host", AppDataProvider.getInstance().getDomen());
 		httpPost.setHeader("Authorization", Utils.getBase64Code(login, password));
 		httpPost.setHeader("User-Agent",
 				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
