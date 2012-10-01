@@ -1,13 +1,8 @@
 package com.test.service;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.test.service.models.FileModel;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -71,7 +66,6 @@ public class BrowserActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final File file = new File(path.get(position));
-
 		if (file.isDirectory()) {
 			if (file.canRead()) {
 				getDir(path.get(position));
@@ -85,37 +79,10 @@ public class BrowserActivity extends ListActivity {
 					.setPositiveButton("Open", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
-							openBook((file.getPath()));
+							Utils.openBook((file.getPath()));
 							finish();
 						}
 					}).show();
 		}
 	}
-
-	private void openBook(String filePath) {
-
-		File file = new File(filePath);
-		// Read text from file
-		StringBuilder text = new StringBuilder();
-
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line;
-
-			while ((line = br.readLine()) != null) {
-				text.append(line);
-				text.append('\n');
-			}
-		} catch (IOException e) {
-			// You'll need to add proper error handling here
-		}
-		FileModel book = new FileModel();
-		book.fileName = file.getName();
-		book.fileSize = file.length();
-		book.content = Utils.copyToBuffer(filePath);
-		book.book = text.toString();
-
-		AppDataProvider.getInstance().setBook(book);
-	}
-
 }

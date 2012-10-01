@@ -7,6 +7,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
+import com.test.service.models.BookMarkModel;
 import com.test.service.models.FileModel;
 
 public class TestServiceManager {
@@ -31,13 +32,15 @@ public class TestServiceManager {
 		instance = null;
 	}
 
-	public String setBookMark(String login, String password, String bookName, int bookPercent) {
+	public String setBookMark(String login, String password, BookMarkModel bookMark) {
 
-		String method = Constants.METHOD_SYNC_BOOKMARK + "?" + "bookName=" + bookName + "&" + "bookPercent="
-				+ bookPercent;
-		HttpResponse response = mRestProxy.webGet(method, login, password);
+		// String method = Constants.METHOD_SYNC_BOOKMARK + "?" + "bookName=" +
+		// bookName + "&" + "bookPercent="
+		// + bookPercent;
+		String result = mRestProxy.webInvoke(Constants.METHOD_SYNC_BOOKMARK, login, password, bookMark);
 
-		return getResponseEntity(response);
+		return result;
+				/*getResponseEntity(response);*/
 	}
 
 	public String getBookMark(String login, String password) {
@@ -45,9 +48,18 @@ public class TestServiceManager {
 		return getResponseEntity(response);
 	}
 
-	public void uploadBook(String login, String password, FileModel file) {
+	public boolean uploadBook(String login, String password, FileModel file) {
 
-		mRestProxy.webInvoke(Constants.METHOD_SYNC_UPLOAD, login, password, file);
+		String result = mRestProxy.webInvoke(Constants.METHOD_SYNC_UPLOAD, login, password, file);
+		if (result.equals("{\"success\":\"Upload was finished successfully\"}"))
+			return true;
+		else
+			return false;
+	}
+
+	public String downloadBook(String login, String password) {
+		HttpResponse response = mRestProxy.webGet(Constants.METHOD_SYNC_DOWNLOAD, login, password);
+		return getResponseEntity(response);
 	}
 
 	private String getResponseEntity(HttpResponse response) {

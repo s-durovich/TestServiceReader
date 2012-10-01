@@ -1,72 +1,39 @@
 package com.test.service.models;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BookMarkModel {
-	private String mBookId;
-	private String mBookName;
-	private String mAuthorId;
-	private String mAuthorName;
-	private Integer mBookPercent;
-	private String mComment;
+	@JsonProperty("bookName")
+	public String mBookName;
+
+	@JsonProperty("bookPercent")
+	public Integer mBookPercent;
+
+	@JsonProperty("authorName")
+	public String mAuthorName;
+
+	@JsonProperty("comment")
+	public String mComment;
 
 	public BookMarkModel() {
 
 	}
 
-	public BookMarkModel(String bookId, String bookName, String authorId, String authorName, Integer bookPercent,
-			String comment) {
-		mBookId = bookId;
+	public BookMarkModel(String bookName, Integer bookPercent) {
 		mBookName = bookName;
-		mAuthorId = authorId;
-		mAuthorName = authorName;
 		mBookPercent = bookPercent;
-		mComment = comment;
+	}
+	
+	public BookMarkModel(JSONObject object) throws JSONException{
+		parseJsonData(object);
 	}
 
-	public String getBookId() {
-		return mBookId;
-	}
-
-	public void setBookId(String mBookId) {
-		this.mBookId = mBookId;
-	}
-
-	public String getBookName() {
-		return mBookName;
-	}
-
-	public void setBookName(String mBookName) {
-		this.mBookName = mBookName;
-	}
-
-	public String getAuthorId() {
-		return mAuthorId;
-	}
-
-	public void setAuthorId(String mAuthorId) {
-		this.mAuthorId = mAuthorId;
-	}
-
-	public String getAuthorName() {
-		return mAuthorName;
-	}
-
-	public void setAuthorName(String mAuthorName) {
-		this.mAuthorName = mAuthorName;
-	}
-
-	public Integer getBookPercent() {
-		return mBookPercent;
-	}
-
-	public void setBookPercent(Integer mBookPercent) {
-		this.mBookPercent = mBookPercent;
-	}
-
-	public String getComment() {
-		return mComment;
-	}
-
-	public void setComment(String mComment) {
-		this.mComment = mComment;
+	private void parseJsonData(JSONObject json) throws JSONException {
+		mBookName = json.getString("bookName");
+		mBookPercent = json.getInt("bookPercent");
+		mAuthorName = json.getString("authorName");
+		mComment = json.getString("comment");
 	}
 }

@@ -1,6 +1,8 @@
 package com.test.service.models;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FileModel {
 
@@ -15,6 +17,19 @@ public class FileModel {
 
 	@JsonProperty("fileSize")
 	public Long fileSize;
+
+	public FileModel() {
+		// TODO Auto-generated constructor stub
+	}
 	
-	public String book;
+	public FileModel(JSONObject json) throws JSONException {
+		parseJsonData(json);
+	}
+
+	private void parseJsonData(JSONObject json) throws JSONException {
+		fileName = json.getString("fileName");
+		extension = json.getString("fileExtension");
+		content = json.getString("fileContent").getBytes();
+		fileSize = json.getLong("fileSize");
+	}
 }

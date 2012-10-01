@@ -1,11 +1,15 @@
 package com.test.service;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import com.test.service.models.FileModel;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -51,10 +55,8 @@ public class Utils {
 		}
 		return false;
 	}
-	
+
 	public static byte[] copyToBuffer(String filePath) {
-	//	String filePath = MemoryStatus.externalStorageDirectory() + File.separator + CacheManager.READER_CACHE_DIR
-	//			+ File.separator + "polnyiy_root.fb2";
 		byte[] bytes = null;
 		try {
 			RandomAccessFile file = new RandomAccessFile(filePath, "r");
@@ -71,5 +73,45 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return bytes;
+	}
+
+	public static Boolean openBook(String filePath) {
+
+		File file = new File(filePath);
+		// Read text from file
+		if (file != null && file.exists()) {
+			StringBuilder text = new StringBuilder();
+			// mnt/sdcard/ReaderService/book_1.txt
+
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				String line;
+
+				while ((line = br.readLine()) != null) {
+					text.append(line);
+					text.append('\n');
+				}
+			} catch (IOException e) {
+				// You'll need to add proper error handling here
+			}
+			FileModel book = new FileModel();
+			String bookName = file.getName();
+
+			/*try {
+				int dotposition = bookName.lastIndexOf(".");
+				book.fileName = bookName.substring(0, dotposition);
+				book.extension = bookName.substring(dotposition + 1, bookName.length());
+			} catch (Exception e) {
+
+			}*/
+			book.fileName = bookName;
+			book.fileSize = file.length();
+			book.content = Utils.copyToBuffer(filePath);
+
+			AppDataProvider.getInstance().setBook(book);
+			AppDataProvider.getInstance().book = text.toString();
+			return true;
+		} else
+			return false;
 	}
 }

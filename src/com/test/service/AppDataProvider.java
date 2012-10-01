@@ -1,8 +1,10 @@
 package com.test.service;
 
+import com.test.service.models.BookMarkModel;
 import com.test.service.models.FileModel;
 
 public class AppDataProvider {
+
 	private static AppDataProvider instance;
 
 	private String mEmail;
@@ -10,6 +12,8 @@ public class AppDataProvider {
 	private String mDomen;
 
 	private FileModel mBook;
+	private BookMarkModel mBookMark;
+	public String book;
 
 	private AppDataProvider() {
 
@@ -56,5 +60,13 @@ public class AppDataProvider {
 
 	public void setBook(FileModel mBook) {
 		this.mBook = mBook;
+	}
+
+	public BookMarkModel getBookMark() {
+		return mBookMark;
+	}
+
+	public void setBookMark(BookMarkModel mBookMark) {
+		this.mBookMark = mBookMark;
 	}
 }

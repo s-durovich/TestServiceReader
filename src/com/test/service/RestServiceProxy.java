@@ -61,7 +61,7 @@ public class RestServiceProxy {
 				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
 		httpGet.setHeader("Connection", "keep-alive");
 		httpGet.setHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
-		httpGet.setHeader("Accept-Encoding", "gzip,deflate,sdch");
+		httpGet.setHeader("Accept-Encoding", "gzip,deflate,sdch");	
 		httpGet.setHeader("Accept-Language", "en-US,en;q=0.8");
 		httpGet.setHeader("Authorization", Utils.getBase64Code(login, password));
 

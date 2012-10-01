@@ -1,7 +1,12 @@
 package com.test.service;
 
+import java.io.File;
 import java.util.Random;
 
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.test.service.models.BookMarkModel;
 import com.test.service.models.FileModel;
 
 import android.app.Activity;
@@ -26,6 +31,9 @@ public class ReaderActivity extends Activity {
 
 	private AlertDialog mSyncDataDialog;
 
+	private int percent;
+	private Random generator;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -34,13 +42,14 @@ public class ReaderActivity extends Activity {
 		mTextViewBook = (TextView) findViewById(R.id.textBook);
 		mServiceManager = TestServiceManager.getInstance();
 		showSyncDataDialog();
+		generator = new Random();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (AppDataProvider.getInstance().getBook() != null && AppDataProvider.getInstance().getBook().book != null)
-			mTextViewBook.setText(AppDataProvider.getInstance().getBook().book);
+		if (AppDataProvider.getInstance().getBook() != null && AppDataProvider.getInstance().book != null)
+			mTextViewBook.setText(AppDataProvider.getInstance().book);
 	}
 
 	@Override
@@ -70,44 +79,88 @@ public class ReaderActivity extends Activity {
 		@Override
 		protected String doInBackground(FileModel... params) {
 			// if (params != null && params[0] != null)
-
+			percent = generator.nextInt(100);
 			if (mStartFlag)
 				return mServiceManager.getBookMark(AppDataProvider.getInstance().getEmail(), AppDataProvider
 						.getInstance().getPassword());
 			else {
 				if (AppDataProvider.getInstance().getBook() != null) {
-					Random generator = new Random();
-					int percent = generator.nextInt(100);
+					BookMarkModel bookMarkModel = new BookMarkModel(AppDataProvider.getInstance().getBook().fileName,
+							percent);
 					return mServiceManager.setBookMark(AppDataProvider.getInstance().getEmail(), AppDataProvider
-							.getInstance().getPassword(), AppDataProvider.getInstance().getBook().fileName, percent);
+							.getInstance().getPassword(), bookMarkModel);
 				} else
 					return null;
 			}
-			/*
-			 * mServiceManager.setBookMark(AppDataProvider.getInstance()
-			 * .getEmail(), AppDataProvider.getInstance() .getPassword());
-			 */
-			// mServiceManager.uploadBook(AppDataProvider.getInstance().getEmail(),
-			// AppDataProvider.getInstance()
-			// .getPassword(), params[0]);
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-
-			if (result != null && result.equals(Constants.ERROR_BOOKMARK)) {
-				if (mStartFlag) {
-					mTextViewBook.setText(result);
-					showOpenBookDialog();
-					syncProgress.setVisibility(View.GONE);
+			if (result != null) {
+				if (result.equals(Constants.ERROR_BOOKMARK)) {
+					if (mStartFlag) {
+						mTextViewBook.setText(result);
+						showOpenBookDialog();
+						syncProgress.setVisibility(View.GONE);
+					} else {
+						new UploadBookTask().execute();
+					}
 				} else {
-					// TODO ADD upload file request
+					try {
+						JSONObject json = new JSONObject(result);
+						BookMarkModel bookMark = new BookMarkModel(json);
+						AppDataProvider.getInstance().setBookMark(bookMark);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
+					if (mStartFlag) {
+						if (Utils.openBook((MemoryStatus.externalStorageDirectory() + File.separator
+								+ CacheManager.READER_DIR + File.separator + AppDataProvider.getInstance().getBookMark().mBookName)))
+							mTextViewBook.setText(AppDataProvider.getInstance().book);
+					} else {
+							new UploadBookTask().execute();
+					}
 				}
-			} else {
+			} else
+				Toast.makeText(ReaderActivity.this, "Error", Toast.LENGTH_SHORT).show();
+		}
+	}
 
+	private class UploadBookTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			boolean result;
+			if (mStartFlag){
+				String content = mServiceManager.downloadBook(AppDataProvider.getInstance().getEmail(), AppDataProvider.getInstance()
+						.getPassword());
+				
 			}
+			else {
+
+				result = mServiceManager.uploadBook(AppDataProvider.getInstance().getEmail(), AppDataProvider
+						.getInstance().getPassword(), AppDataProvider.getInstance().getBook());
+				if (result) {
+					BookMarkModel bookMarkModel = new BookMarkModel(AppDataProvider.getInstance().getBook().fileName,
+							percent);
+					mServiceManager.setBookMark(AppDataProvider.getInstance().getEmail(), AppDataProvider.getInstance()
+							.getPassword(), bookMarkModel);
+					//Toast.makeText(ReaderActivity.this, "Book was successfully uploaded", Toast.LENGTH_SHORT).show();
+				} else{
+					
+				}
+					//Toast.makeText(ReaderActivity.this, "Book was not uploaded", Toast.LENGTH_SHORT).show();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			// finish();
 		}
 	}
 
@@ -123,16 +176,6 @@ public class ReaderActivity extends Activity {
 					new SyncBookmarkAsyncTask().execute();
 				else
 					Toast.makeText(ReaderActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
-				// startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-				// new SyncBookmarkAsyncTask().execute(mStartFlag);
-
-				/*
-				 * FileModel file = new FileModel(); file.fileName =
-				 * "text_book"; file.extension = "rtf"; file.fileSize =
-				 * 610000.0; byte[] bytes = copyToBuffer(); if (bytes != null) {
-				 * file.content = bytes; new
-				 * SyncBookmarkAsyncTask().execute(file); }
-				 */
 			}
 		});
 		builder.setNegativeButton(R.string.btn_cansel, new DialogInterface.OnClickListener() {
@@ -140,6 +183,8 @@ public class ReaderActivity extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
+				if (!mStartFlag)
+					finish();
 				// startActivity(new Intent(ReaderActivity.this,
 				// BrowserActivity.class));
 			}
